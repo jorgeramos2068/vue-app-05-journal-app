@@ -1,27 +1,47 @@
 <template>
   <div
     class="entry-container mb-3 pointer p-2"
-    @click="$router.push({ name: 'entry', params: { id: 10 } })"
+    @click="$router.push({ name: 'entry', params: { id: entry.id } })"
   >
     <div class="entry-title d-flex">
       <span class="text-success fs-5 fw-bold">October</span>
-      <span class="mx-1 fs-5">06, </span>
+      <span class="mx-1 fs-5">{{ day }}, </span>
       <span class="mx-2 fw-light">2022</span>
     </div>
     <div class="entry-description">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus eu
-      malesuada ante. Quisque magna sapien, tincidunt vel ornare sed, pharetra
-      sit amet sapien. Nam pellentesque augue sit amet purus viverra fermentum.
-      Vivamus vel ex tristique, porta nunc id, congue ex. Sed in nibh dolor.
-      Nulla posuere efficitur sem in sodales. Vivamus iaculis metus ac velit
-      lacinia gravida. Proin mattis nisi id nulla dignissim feugiat quis non
-      sapien.
+      {{ shortText }}
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    entry: {
+      type: Object,
+      required: true,
+    },
+  },
+  computed: {
+    shortText() {
+      return this.entry.text.length > 150
+        ? `${this.entry.text.substring(0, 150)}...`
+        : this.entry.text;
+    },
+    day() {
+      const date = new Date(this.entry.date);
+      return date.getDate();
+    },
+    month() {
+      const date = new Date(this.entry.date);
+      return date.getMonth();
+    },
+    year() {
+      const date = new Date(this.entry.date);
+      return date.getFullYear();
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
