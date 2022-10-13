@@ -4,9 +4,9 @@
     @click="$router.push({ name: 'entry', params: { id: entry.id } })"
   >
     <div class="entry-title d-flex">
-      <span class="text-success fs-5 fw-bold">October</span>
+      <span class="text-success fs-5 fw-bold">{{ month }}</span>
       <span class="mx-1 fs-5">{{ day }}, </span>
-      <span class="mx-2 fw-light">2022</span>
+      <span class="mx-2 fw-light">{{ year }}</span>
     </div>
     <div class="entry-description">
       {{ shortText }}
@@ -15,6 +15,8 @@
 </template>
 
 <script>
+import getCustomDate from '../helpers/getCustomDate';
+
 export default {
   props: {
     entry: {
@@ -29,16 +31,16 @@ export default {
         : this.entry.text;
     },
     day() {
-      const date = new Date(this.entry.date);
-      return date.getDate();
+      const { day } = getCustomDate(this.entry.date);
+      return day;
     },
     month() {
-      const date = new Date(this.entry.date);
-      return date.getMonth();
+      const { month } = getCustomDate(this.entry.date);
+      return month;
     },
     year() {
-      const date = new Date(this.entry.date);
-      return date.getFullYear();
+      const { year } = getCustomDate(this.entry.date);
+      return year;
     },
   },
 };
