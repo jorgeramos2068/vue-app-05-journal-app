@@ -23,7 +23,7 @@
       ></textarea>
     </div>
   </template>
-  <Fab icon="fa-save" />
+  <Fab icon="fa-save" @on-click="saveEntry()" />
   <img
     src="https://th-thumbnailer.cdn-si-edu.com/Y99SIMiKe48gMhaOJVV71GaN0jw=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/a8/51/a851be96-2508-422f-88fa-5aee6fc7ada3/stand_in_cover_pic.jpg"
     alt="entry-picture"
@@ -33,7 +33,7 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions /*, mapState*/ } from 'vuex';
 import getCustomDate from '../helpers/getCustomDate';
 
 export default {
@@ -60,6 +60,12 @@ export default {
       }
       this.entry = entry;
     },
+    async saveEntry() {
+      this.updateEntry(this.entry);
+    },
+    ...mapActions({
+      updateEntry: 'journal/updateEntry',
+    }),
   },
   computed: {
     ...mapGetters({
