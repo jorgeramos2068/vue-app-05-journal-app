@@ -10,4 +10,6 @@ export const updateEntry = (state, updatedEntry) => {
   }
 };
 
-export const addEntry = (/*state*/) => {};
+export const addEntry = (state, newEntry) => {
+  state.entries = [newEntry, ...state.entries];
+};
