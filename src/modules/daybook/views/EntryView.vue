@@ -7,7 +7,11 @@
         <span class="mx-2 fs-4 fw-light">{{ year }}</span>
       </div>
       <div>
-        <button class="btn btn-danger mx-2">
+        <button
+          v-if="this.entry.id"
+          class="btn btn-danger mx-2"
+          @click="onDeleteEntry()"
+        >
           Delete <i class="fa fa-trash-alt"></i>
         </button>
         <button class="btn btn-primary">
@@ -76,9 +80,14 @@ export default {
         this.$router.push({ name: 'entry', params: { id: newId } });
       }
     },
+    async onDeleteEntry() {
+      await this.deleteEntry(this.entry.id);
+      this.$router.push({ name: 'no-entry' });
+    },
     ...mapActions({
       updateEntry: 'journal/updateEntry',
       createEntry: 'journal/createEntry',
+      deleteEntry: 'journal/deleteEntry',
     }),
   },
   computed: {
