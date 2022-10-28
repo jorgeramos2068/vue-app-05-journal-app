@@ -7,6 +7,13 @@
         <span class="mx-2 fs-4 fw-light">{{ year }}</span>
       </div>
       <div>
+        <input
+          type="file"
+          v-show="false"
+          @change="onSelectedImage($event)"
+          ref="imageSelector"
+          accept="image/png, image/jpeg"
+        />
         <button
           v-if="this.entry.id"
           class="btn btn-danger mx-2"
@@ -14,7 +21,7 @@
         >
           Delete <i class="fa fa-trash-alt"></i>
         </button>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" @click="onSelectImage">
           Upload a photo <i class="fa fa-upload"></i>
         </button>
       </div>
@@ -29,7 +36,8 @@
   </template>
   <Fab icon="fa-save" @on-click="saveEntry()" />
   <img
-    src="https://th-thumbnailer.cdn-si-edu.com/Y99SIMiKe48gMhaOJVV71GaN0jw=/1000x750/filters:no_upscale()/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/a8/51/a851be96-2508-422f-88fa-5aee6fc7ada3/stand_in_cover_pic.jpg"
+    v-if="localImage"
+    :src="localImage"
     alt="entry-picture"
     class="img-thumbnail"
   />
@@ -45,17 +53,22 @@ export default {
   components: {
     Fab: defineAsyncComponent(() => import('../components/Fab.vue')),
   },
+
   props: {
     id: {
       type: String,
       required: true,
     },
   },
+
   data() {
     return {
       entry: null,
+      localImage: null,
+      file: null,
     };
   },
+
   methods: {
     loadEntry() {
       let entry;
@@ -73,6 +86,7 @@ export default {
       }
       this.entry = entry;
     },
+
     async saveEntry() {
       new Swal({
         title: 'Wait, please',
@@ -87,6 +101,7 @@ export default {
       }
       Swal.fire('Saved', 'The entry was saved successfully', 'success');
     },
+
     async onDeleteEntry() {
       const { isConfirmed } = await Swal.fire({
         title: 'Are you sure',
@@ -105,12 +120,31 @@ export default {
         Swal.fire('Deleted', '', 'success');
       }
     },
+
+    onSelectedImage($event) {
+      const file = $event.target.files[0];
+      if (!file) {
+        this.localImage = null;
+        this.file = null;
+        return;
+      }
+      this.file = file;
+      const fr = new FileReader();
+      fr.onload = () => (this.localImage = fr.result);
+      fr.readAsDataURL(file);
+    },
+
+    onSelectImage() {
+      this.$refs.imageSelector.click();
+    },
+
     ...mapActions({
       updateEntry: 'journal/updateEntry',
       createEntry: 'journal/createEntry',
       deleteEntry: 'journal/deleteEntry',
     }),
   },
+
   computed: {
     ...mapGetters({
       getEntryById: 'journal/getEntryById',
@@ -128,9 +162,11 @@ export default {
       return year;
     },
   },
+
   created() {
     this.loadEntry();
   },
+
   watch: {
     id() {
       this.loadEntry();
