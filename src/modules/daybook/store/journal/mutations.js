@@ -4,7 +4,7 @@ export const setEntries = (state, entries) => {
 };
 
 export const updateEntry = (state, updatedEntry) => {
-  const index = state.entries.find(entry => entry.id === updateEntry.id);
+  const index = state.entries.findIndex(entry => entry.id === updatedEntry.id);
   if (index >= 0) {
     state.entries[index] = updatedEntry;
   }
