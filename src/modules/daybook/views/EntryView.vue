@@ -111,7 +111,7 @@ export default {
         confirmButtonText: 'Yes, I am sure',
       });
       if (isConfirmed) {
-        new Swal({
+        Swal.fire({
           title: 'Wait, please',
           allowOutsideClick: false,
         });
