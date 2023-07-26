@@ -37,7 +37,8 @@
 
 <script>
 import { defineAsyncComponent } from 'vue';
-import { mapGetters, mapActions /*, mapState*/ } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import Swal from 'sweetalert2';
 import getCustomDate from '../helpers/getCustomDate';
 
 export default {
@@ -73,16 +74,36 @@ export default {
       this.entry = entry;
     },
     async saveEntry() {
+      new Swal({
+        title: 'Wait, please',
+        allowOutsideClick: false,
+      });
+      Swal.showLoading();
       if (this.entry.id) {
         await this.updateEntry(this.entry);
       } else {
         const newId = await this.createEntry(this.entry);
         this.$router.push({ name: 'entry', params: { id: newId } });
       }
+      Swal.fire('Saved', 'The entry was saved successfully', 'success');
     },
     async onDeleteEntry() {
-      await this.deleteEntry(this.entry.id);
-      this.$router.push({ name: 'no-entry' });
+      const { isConfirmed } = await Swal.fire({
+        title: 'Are you sure',
+        text: 'This action cannot be undone',
+        showDenyButton: true,
+        confirmButtonText: 'Yes, I am sure',
+      });
+      if (isConfirmed) {
+        new Swal({
+          title: 'Wait, please',
+          allowOutsideClick: false,
+        });
+        Swal.showLoading();
+        await this.deleteEntry(this.entry.id);
+        this.$router.push({ name: 'no-entry' });
+        Swal.fire('Deleted', '', 'success');
+      }
     },
     ...mapActions({
       updateEntry: 'journal/updateEntry',
