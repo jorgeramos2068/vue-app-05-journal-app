@@ -1,9 +1,9 @@
 <template>
   <div class="entry-title d-flex justify-content-between p-2">
     <div>
-      <span class="text-success fs-3 fw-bold">July</span>
-      <span class="mx-1 fs-3">15</span>
-      <span class="mx-2 fs-4 fw-light">2022</span>
+      <span class="text-success fs-3 fw-bold">{{ month }}</span>
+      <span class="mx-1 fs-3">{{ day }}</span>
+      <span class="mx-2 fs-4 fw-light">{{ year }}</span>
     </div>
     <div>
       <button class="btn btn-danger mx-2">
@@ -16,7 +16,10 @@
   </div>
   <hr />
   <div class="d-flex flex-column px-3 h-75">
-    <textarea placeholder="What happened today?"></textarea>
+    <textarea
+      placeholder="What happened today?"
+      v-model="entry.text"
+    ></textarea>
   </div>
   <Fab icon="fa-save" />
   <img
@@ -29,6 +32,7 @@
 <script>
 import { defineAsyncComponent } from 'vue';
 import { mapGetters } from 'vuex';
+import getCustomDate from '../helpers/getCustomDate';
 
 export default {
   components: {
@@ -40,16 +44,36 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      entry: null,
+    };
+  },
   methods: {
     loadEntry() {
       const entry = this.getEntryById(this.id);
-      console.log(entry);
+      if (!entry) {
+        this.$router.push({ name: 'no-entry' });
+      }
+      this.entry = entry;
     },
   },
   computed: {
     ...mapGetters({
       getEntryById: 'journal/getEntryById',
     }),
+    day() {
+      const { day } = getCustomDate(this.entry.date);
+      return day;
+    },
+    month() {
+      const { month } = getCustomDate(this.entry.date);
+      return month;
+    },
+    year() {
+      const { year } = getCustomDate(this.entry.date);
+      return year;
+    },
   },
   created() {
     this.loadEntry();
