@@ -50,6 +50,7 @@ import Swal from 'sweetalert2';
 import getCustomDate from '../helpers/getCustomDate';
 
 export default {
+  name: 'EntryView',
   components: {
     Fab: defineAsyncComponent(() => import('../components/Fab.vue')),
   },
