@@ -57,4 +57,26 @@ describe('Journal store', () => {
       mockJournalState.entries.length
     );
   });
+
+  it('should call the getEntriesByTerm getter', () => {
+    const store = createVuexStore(mockJournalState);
+    expect(store.getters['journal/getEntriesByTerm']('').length).toBe(
+      mockJournalState.entries.length
+    );
+    expect(store.getters['journal/getEntriesByTerm']('text 02').length).toBe(1);
+  });
+
+  it('should call the getEntryById getter', () => {
+    const store = createVuexStore(mockJournalState);
+    expect(store.getters['journal/getEntryById']('not-valid')).toBeFalsy();
+    expect(store.getters['journal/getEntryById']('test-id-03').id).toBe(
+      mockJournalState.entries[2].id
+    );
+  });
+
+  it('should call the loadEntries action', async () => {
+    const store = createVuexStore({ isLoading: true, entries: [] });
+    await store.dispatch('journal/loadEntries');
+    expect(store.state.journal.entries.length).toBe(1);
+  });
 });
