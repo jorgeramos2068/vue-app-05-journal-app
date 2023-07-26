@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="no-entry-container d-flex justify-content-center">
     <div class="d-flex justify-content-center">
       <h1 class="align-self-center">Nothing selected</h1>
     </div>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from '@vue/runtime-core';
+import { defineAsyncComponent } from 'vue';
 
 export default {
   components: {
@@ -18,7 +18,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div {
+.no-entry-container {
   height: 100%;
 }
 </style>
